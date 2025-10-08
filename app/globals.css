@@ -104,3 +104,35 @@
     }
   }
 }
+
+/* ===== iPhone/Safari Performance Fix (tanpa ubah tampilan) ===== */
+@supports (-webkit-touch-callout: none) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  /* Matikan efek blur berat di Safari (kadang bikin lag) */
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-lg {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Aktifkan GPU acceleration untuk animasi */
+  .motion-optimized {
+    will-change: transform, opacity !important;
+    transform: translateZ(0);
+  }
+
+  /* Kurangi efek shadow berat */
+  .heavy-shadow {
+    box-shadow: none !important;
+  }
+}
+
+/* Safari tambahan jika dideteksi lewat class */
+body.safari-optimized * {
+  will-change: transform, opacity !important;
+  transform: translateZ(0);
+}

@@ -2,15 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-
-import ElectricBorder from "../components/ElectricBorder";
-import RotatingText from "../components/RotatingText";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import ShinyText from "../components/ShinyText";
-import ScrollVelocity from "../components/ScrollVelocity";
-import LogoLoop from "../components/LogoLoop";
-
+import RotatingText from "../components/RotatingText";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import {
   IconBrandInstagram,
@@ -18,38 +13,54 @@ import {
   IconBrandX,
   IconBrandLinkedin,
 } from "@tabler/icons-react";
-
 import {
   SiReact,
   SiNextdotjs,
   SiTypescript,
   SiTailwindcss,
 } from "react-icons/si";
+import emailjs from "@emailjs/browser";
 
-// 👉 Landyard dynamic import
+// 🧠 Lazy load components berat
+const ElectricBorder = dynamic(() => import("../components/ElectricBorder"), {
+  ssr: false,
+});
+const ScrollVelocity = dynamic(() => import("../components/ScrollVelocity"), {
+  ssr: false,
+});
+const LogoLoop = dynamic(() => import("../components/LogoLoop"), {
+  ssr: false,
+});
 const Landyard = dynamic(() => import("../components/Landyard/Landyard"), {
   ssr: false,
 });
 
-import emailjs from "@emailjs/browser";
-
 export default function Home() {
-  // ====== STATE ======
   const [lang, setLang] = useState<"en" | "id">("en");
   const aboutRef = useRef<HTMLDivElement | null>(null);
   const skillsRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
-
   const [isClient, setIsClient] = useState(false);
-  useEffect(() => setIsClient(true), []);
+  const prefersReducedMotion = useReducedMotion();
 
-  //  detect kalau skills kelihatan
-  const isSkillsInView = useInView(skillsRef, {
-    once: true,
-    amount: 0.4,
-  });
+  useEffect(() => {
+    setIsClient(true);
 
+    // 💤 Pause animasi saat tab tidak aktif
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        document.body.classList.add("paused");
+      } else {
+        document.body.classList.remove("paused");
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.4 });
   // 👉 LogoLoop data
   const techLogos = [
     {
@@ -168,35 +179,29 @@ export default function Home() {
         }
       );
   };
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <div className="font-sans snap-y snap-mandatory scroll-smooth bg-white text-black dark:bg-[#050B16] dark:text-gray-200 transition-colors duration-300">
       {/* ====== NAVBAR ====== */}
       <Navbar />
 
+      {/* ===== HERO SECTION ===== */}
       <section
         id="home"
-        className="snap-start min-h-screen bg-white text-black dark:bg-[#050B16] dark:text-white
-       grid grid-cols-1 lg:grid-cols-2 items-center justify-center
-       p-6 lg:p-12 gap-y-6 lg:gap-x-12 transition-colors duration-300"
+        className="snap-start min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center justify-center p-6 lg:p-12 gap-y-6 lg:gap-x-12"
       >
-        {/* Left Text */}
+        {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
-          <div
-            className="w-full text-base sm:text-lg lg:text-3xl font-bold 
-         flex flex-col sm:flex-row flex-wrap 
-         items-center lg:items-start justify-center lg:justify-start 
-         gap-y-1 sm:gap-x-2 leading-snug"
-          >
-            <span className="block">I am ready for job</span>
+          <div className="w-full text-base sm:text-lg lg:text-3xl font-bold flex flex-wrap items-center justify-center lg:justify-start gap-y-1 sm:gap-x-2 leading-snug">
+            <span>I am ready for job</span>
             <RotatingText
               texts={[
                 "Front-End Developer",
                 "IT Support",
                 "Cyber Security Analyst",
               ]}
-              mainClassName="px-2 bg-cyan-300 text-black rounded-md 
-               inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
+              mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
               staggerFrom="last"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
@@ -236,22 +241,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Profile Image */}
-        <div className="flex items-center justify-center order-2">
-          <ElectricBorder
-            color="#67E8F9"
-            speed={1.2}
-            chaos={0.6}
-            thickness={3}
-            style={{ borderRadius: "50%", padding: "6px" }}
-          >
-            <img
-              src="/profil.png"
-              alt="Tiovaldo"
-              className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] 
-                 rounded-full object-cover object-top"
-            />
-          </ElectricBorder>
+        {/* RIGHT IMAGE (Lazy Animated Border) */}
+        <div className="flex items-center justify-center">
+          {isClient && (
+            <ElectricBorder
+              color="#67E8F9"
+              speed={isMobile ? 0.6 : 1.2}
+              chaos={isMobile ? 0.3 : 0.6}
+              thickness={2}
+              style={{ borderRadius: "50%", padding: "6px" }}
+            >
+              <img
+                src="/profil.png"
+                alt="Tiovaldo"
+                className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] rounded-full object-cover object-top"
+                loading="lazy"
+              />
+            </ElectricBorder>
+          )}
         </div>
       </section>
 

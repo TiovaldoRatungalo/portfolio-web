@@ -195,27 +195,42 @@ export default function Home() {
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
           <div className="w-full text-base sm:text-lg lg:text-3xl font-bold flex flex-wrap items-center justify-center lg:justify-start gap-y-1 sm:gap-x-2 leading-snug">
             <span>I am ready for job</span>
-            <RotatingText
-              texts={[
-                "Front-End Developer",
-                "IT Support",
-                "Cyber Security Analyst",
-              ]}
-              mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
-              staggerFrom="last"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-120%" }}
-              staggerDuration={0.025}
-              splitLevelClassName="overflow-hidden pb-0.5"
-              transition={{ type: "spring", damping: 30, stiffness: 400 }}
-              rotationInterval={4000}
-            />
+            {typeof navigator !== "undefined" &&
+            /iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
+              // ✅ Static version for iPhone (no lag)
+              <span className="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold">
+                Front-End Developer
+              </span>
+            ) : (
+              // 💫 Animated version for other devices
+              <RotatingText
+                texts={[
+                  "Front-End Developer",
+                  "IT Support",
+                  "Cyber Security Analyst",
+                ]}
+                mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
+                staggerFrom="last"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden pb-0.5"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={5000}
+              />
+            )}
           </div>
 
           <ShinyText
             text="Tiovaldo Ratungalo"
-            speed={5}
+            // ⚡ Kurangi kecepatan efek cahaya di iPhone agar ringan
+            speed={
+              typeof navigator !== "undefined" &&
+              /iPhone|iPad|iPod/i.test(navigator.userAgent)
+                ? 0
+                : 5
+            }
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-cyan-300"
           />
 
@@ -246,8 +261,23 @@ export default function Home() {
           {isClient && (
             <ElectricBorder
               color="#67E8F9"
-              speed={isMobile ? 0.6 : 1.2}
-              chaos={isMobile ? 0.3 : 0.6}
+              // ⚙️ Kurangi efek chaos & speed di iPhone agar CPU ringan
+              speed={
+                typeof navigator !== "undefined" &&
+                /iPhone|iPad|iPod/i.test(navigator.userAgent)
+                  ? 0.4
+                  : isMobile
+                  ? 0.6
+                  : 1.2
+              }
+              chaos={
+                typeof navigator !== "undefined" &&
+                /iPhone|iPad|iPod/i.test(navigator.userAgent)
+                  ? 0.2
+                  : isMobile
+                  ? 0.3
+                  : 0.6
+              }
               thickness={2}
               style={{ borderRadius: "50%", padding: "6px" }}
             >
@@ -264,11 +294,20 @@ export default function Home() {
 
       {/* ====== SCROLL TEXT (About Me) ====== */}
       <section className="snap-start py-6 bg-transparent flex flex-col gap-2">
-        <ScrollVelocity
-          texts={["About Me", "About Me"]}
-          velocity={30}
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
-        />
+        {typeof navigator !== "undefined" &&
+        /iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
+          // 🧊 Static text for iPhone (no scroll velocity)
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide text-center">
+            About Me
+          </h2>
+        ) : (
+          // 🚀 Animated scroll for other devices
+          <ScrollVelocity
+            texts={["About Me", "About Me"]}
+            velocity={25}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
+          />
+        )}
       </section>
 
       {/* ====== ABOUT ====== */}

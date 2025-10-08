@@ -63,11 +63,11 @@
     --chart-5: 340 75% 55%;
   }
 }
-
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -103,35 +103,53 @@
       opacity: 0.7;
     }
   }
+
+  /* --- KELAS OPTIMISASI ANIMASI (ditambahkan) --- */
+  /* Gunakan .motion-smooth pada elemen motion utama (h1, container, image wrapper) */
+  .motion-smooth {
+    will-change: transform, opacity;
+    /* paksa composite layer untuk GPU rendering */
+    transform: translateZ(0);
+    /* sedikit backface untuk mencegah flicker */
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
-/* ===== iPhone/Safari Performance Fix (tanpa ubah tampilan) ===== */
+/* ===== iPhone/Safari Performance Optimization (tanpa matikan animasi) ===== */
 @supports (-webkit-touch-callout: none) {
   html {
-    scroll-behavior: auto !important;
+    scroll-behavior: smooth !important;
   }
 
-  /* Matikan efek blur berat di Safari (kadang bikin lag) */
+  /* 🔹 Kurangi blur berat tapi biarkan efek halus tetap ada */
   .backdrop-blur,
   .backdrop-blur-md,
   .backdrop-blur-lg {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
   }
 
-  /* Aktifkan GPU acceleration untuk animasi */
+  /* 🔹 Pastikan animasi tetap halus (aktifkan GPU acceleration) */
   .motion-optimized {
     will-change: transform, opacity !important;
     transform: translateZ(0);
   }
 
-  /* Kurangi efek shadow berat */
+  /* Beri prioritas juga ke .motion-smooth di Safari */
+  .motion-smooth {
+    will-change: transform, opacity !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* 🔹 Ringankan shadow berat tapi jangan hilangkan total */
   .heavy-shadow {
-    box-shadow: none !important;
+    box-shadow: 0 0 8px rgba(103, 232, 249, 0.3) !important;
   }
 }
 
-/* Safari tambahan jika dideteksi lewat class */
+/* Safari Optimized Mode */
 body.safari-optimized * {
   will-change: transform, opacity !important;
   transform: translateZ(0);

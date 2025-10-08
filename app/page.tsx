@@ -1,5 +1,4 @@
 "use client";
-
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
@@ -44,9 +43,19 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
+  // OPTIMASI: State untuk deteksi iPhone dan mobile (client-side only, no hydration mismatch)
+  const [isIphone, setIsIphone] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const shouldReduceMotion = isIphone || prefersReducedMotion; //
+
   useEffect(() => {
     setIsClient(true);
-
+    // OPTIMASI: Deteksi iPhone dan mobile di client-side
+    if (typeof window !== "undefined") {
+      const ua = navigator.userAgent;
+      setIsIphone(/iPhone|iPad|iPod/i.test(ua));
+      setIsMobile(window.innerWidth < 768);
+    }
     // 💤 Pause animasi saat tab tidak aktif
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -59,7 +68,6 @@ export default function Home() {
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
-
   const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.4 });
   // 👉 LogoLoop data
   const techLogos = [
@@ -179,59 +187,56 @@ export default function Home() {
         }
       );
   };
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <div className="font-sans snap-y snap-mandatory scroll-smooth bg-white text-black dark:bg-[#050B16] dark:text-gray-200 transition-colors duration-300">
       {/* ====== NAVBAR ====== */}
       <Navbar />
-
       {/* ===== HERO SECTION ===== */}
       <section
         id="home"
         className="snap-start min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center justify-center p-6 lg:p-12 gap-y-6 lg:gap-x-12"
+        style={{
+          scrollSnapType: "y mandatory",
+          willChange: "transform",
+        }}
       >
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
           <div className="w-full text-base sm:text-lg lg:text-3xl font-bold flex flex-wrap items-center justify-center lg:justify-start gap-y-1 sm:gap-x-2 leading-snug">
             <span>I am ready for job</span>
-            {typeof navigator !== "undefined" &&
-            /iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
-              // ✅ Static version for iPhone (no lag)
-              <span className="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold">
-                Front-End Developer
-              </span>
-            ) : (
-              // 💫 Animated version for other devices
-              <RotatingText
-                texts={[
-                  "Front-End Developer",
-                  "IT Support",
-                  "Cyber Security Analyst",
-                ]}
-                mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
-                staggerFrom="last"
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "-120%" }}
-                staggerDuration={0.025}
-                splitLevelClassName="overflow-hidden pb-0.5"
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                rotationInterval={5000}
-              />
-            )}
+            {isClient &&
+              (shouldReduceMotion ? (
+                // ✅ Static version for iPhone / reduced motion
+                <span className="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold">
+                  Front-End Developer
+                </span>
+              ) : (
+                // 💫 Animated version for other devices
+                <RotatingText
+                  texts={[
+                    "Front-End Developer",
+                    "IT Support",
+                    "Cyber Security Analyst",
+                  ]}
+                  mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
+                  staggerFrom="last"
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "-120%" }}
+                  staggerDuration={0.025}
+                  splitLevelClassName="overflow-hidden pb-0.5"
+                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                  rotationInterval={5000}
+                />
+              ))}
           </div>
 
           <ShinyText
             text="Tiovaldo Ratungalo"
-            // ⚡ Kurangi kecepatan efek cahaya di iPhone agar ringan
-            speed={
-              typeof navigator !== "undefined" &&
-              /iPhone|iPad|iPod/i.test(navigator.userAgent)
-                ? 0
-                : 5
-            }
+            speed={shouldReduceMotion ? 0 : 5}
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-cyan-300"
+            style={{ willChange: "transform" }} // OPTIMASI: Hardware acceleration
           />
 
           <p className="max-w-md md:max-w-xl text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed text-center lg:text-left">
@@ -261,31 +266,22 @@ export default function Home() {
           {isClient && (
             <ElectricBorder
               color="#67E8F9"
-              // ⚙️ Kurangi efek chaos & speed di iPhone agar CPU ringan
-              speed={
-                typeof navigator !== "undefined" &&
-                /iPhone|iPad|iPod/i.test(navigator.userAgent)
-                  ? 0.4
-                  : isMobile
-                  ? 0.6
-                  : 1.2
-              }
-              chaos={
-                typeof navigator !== "undefined" &&
-                /iPhone|iPad|iPod/i.test(navigator.userAgent)
-                  ? 0.2
-                  : isMobile
-                  ? 0.3
-                  : 0.6
-              }
+              speed={shouldReduceMotion ? 0.1 : isMobile ? 0.6 : 1.2}
+              chaos={shouldReduceMotion ? 0.05 : isMobile ? 0.3 : 0.6}
               thickness={2}
-              style={{ borderRadius: "50%", padding: "6px" }}
+              style={{
+                borderRadius: "50%",
+                padding: "6px",
+                willChange: "transform",
+              }}
             >
               <img
                 src="/profil.png"
                 alt="Tiovaldo"
                 className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] rounded-full object-cover object-top"
                 loading="lazy"
+                decoding="async"
+                sizes="(max-width: 768px) 80vw, (max-width: 1024px) 40vw, 28rem"
               />
             </ElectricBorder>
           )}
@@ -293,21 +289,26 @@ export default function Home() {
       </section>
 
       {/* ====== SCROLL TEXT (About Me) ====== */}
-      <section className="snap-start py-6 bg-transparent flex flex-col gap-2">
-        {typeof navigator !== "undefined" &&
-        /iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
-          // 🧊 Static text for iPhone (no scroll velocity)
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide text-center">
-            About Me
-          </h2>
-        ) : (
-          // 🚀 Animated scroll for other devices
-          <ScrollVelocity
-            texts={["About Me", "About Me"]}
-            velocity={25}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
-          />
-        )}
+      <section
+        className="snap-start py-6 bg-transparent flex flex-col gap-2"
+        style={{ scrollSnapType: "y mandatory" }}
+      >
+        {isClient &&
+          (shouldReduceMotion ? (
+            // 🧊 Static text for iPhone / reduced motion (OPTIMASI: Gunakan state)
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide text-center">
+              About Me
+            </h2>
+          ) : (
+            // 🚀 Animated scroll for other devices
+            <div style={{ willChange: "transform" }}>
+              <ScrollVelocity
+                texts={["About Me", "About Me"]}
+                velocity={25}
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
+              />
+            </div>
+          ))}
       </section>
 
       {/* ====== ABOUT ====== */}
@@ -327,11 +328,11 @@ export default function Home() {
           <motion.div className="bg-white/90 dark:bg-[#0C1424] dark:bg-opacity-70 p-5 rounded-xl shadow-md border border-gray-200 dark:border-cyan-400 dark:border-opacity-20 transition-colors">
             <div className="text-gray-700 dark:text-gray-300 text-justify space-y-4">
               <p>
-                Hello, My name is Tiovaldo Sindovan Ratungalo.I graduated with a
-                Bachelor’s degree in Computer Science from Universitas Klabat in
-                2024. I have a strong interest in technology, programming, and
-                cybersecurity. My passion for AI development and front-end web
-                design continues to grow.
+                Hello, My name is Tiovaldo Sindovan Ratungalo. I graduated with
+                a Bachelor’s degree in Computer Science from Universitas Klabat
+                in 2024. I have a strong interest in technology, programming,
+                and cybersecurity. My passion for AI development and front-end
+                web design continues to grow.
               </p>
               <p>
                 Currently, I am focusing on exploring the world of trading,

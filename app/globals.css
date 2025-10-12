@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================
+   🧠 GLOBAL SAFARI & iPHONE OPTIMIZED
+   ===================================== */
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent; /* Hilangkan highlight saat tap di iPhone */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -36,6 +46,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -63,6 +74,7 @@
     --chart-5: 340 75% 55%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
@@ -78,7 +90,7 @@
       0 0 32px #06b6d4;
   }
 
-  /* SPARKLE ping */
+  /* ======= SPARKLE EFFECT ======= */
   .sparkle {
     position: absolute;
     width: 4px;
@@ -104,25 +116,24 @@
     }
   }
 
-  /* --- KELAS OPTIMISASI ANIMASI (ditambahkan) --- */
-  /* Gunakan .motion-smooth pada elemen motion utama (h1, container, image wrapper) */
+  /* ======= OPTIMISASI ANIMASI / GPU ======= */
   .motion-smooth {
     will-change: transform, opacity;
-    /* paksa composite layer untuk GPU rendering */
     transform: translateZ(0);
-    /* sedikit backface untuk mencegah flicker */
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
 }
 
-/* ===== iPhone/Safari Performance Optimization (tanpa matikan animasi) ===== */
+/* =====================================
+   📱 iPHONE & SAFARI PERFORMANCE FIXES
+   ===================================== */
 @supports (-webkit-touch-callout: none) {
   html {
     scroll-behavior: smooth !important;
   }
 
-  /* 🔹 Kurangi blur berat tapi biarkan efek halus tetap ada */
+  /* 🔹 Kurangi blur berat tapi pertahankan efek */
   .backdrop-blur,
   .backdrop-blur-md,
   .backdrop-blur-lg {
@@ -130,26 +141,26 @@
     backdrop-filter: blur(4px) !important;
   }
 
-  /* 🔹 Pastikan animasi tetap halus (aktifkan GPU acceleration) */
+  /* 🔹 Aktifkan GPU untuk animasi */
   .motion-optimized {
     will-change: transform, opacity !important;
     transform: translateZ(0);
   }
 
-  /* Beri prioritas juga ke .motion-smooth di Safari */
+  /* 🔹 Prioritaskan .motion-smooth di Safari */
   .motion-smooth {
     will-change: transform, opacity !important;
     transform: translateZ(0) !important;
     backface-visibility: hidden !important;
   }
 
-  /* 🔹 Ringankan shadow berat tapi jangan hilangkan total */
+  /* 🔹 Ringankan shadow berat */
   .heavy-shadow {
     box-shadow: 0 0 8px rgba(103, 232, 249, 0.3) !important;
   }
 }
 
-/* Safari Optimized Mode */
+/* Mode tambahan untuk Safari Optimization */
 body.safari-optimized * {
   will-change: transform, opacity !important;
   transform: translateZ(0);

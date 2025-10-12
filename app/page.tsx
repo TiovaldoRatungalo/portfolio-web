@@ -1,4 +1,5 @@
 "use client";
+
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
@@ -42,20 +43,22 @@ export default function Home() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-
-  // OPTIMASI: State untuk deteksi iPhone dan mobile (client-side only, no hydration mismatch)
-  const [isIphone, setIsIphone] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const shouldReduceMotion = isIphone || prefersReducedMotion; //
+  const [isIPhone, setIsIPhone] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    // OPTIMASI: Deteksi iPhone dan mobile di client-side
-    if (typeof window !== "undefined") {
-      const ua = navigator.userAgent;
-      setIsIphone(/iPhone|iPad|iPod/i.test(ua));
-      setIsMobile(window.innerWidth < 768);
+
+    // ✅ Deteksi iPhone / Safari (safest detection for mobile Safari)
+    try {
+      const ua = navigator.userAgent || "";
+      const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
+      const isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua);
+      if (isIosDevice || isSafari) setIsIPhone(true);
+    } catch (e) {
+      // ignore in SSR or weird environments
+      setIsIPhone(false);
     }
+
     // 💤 Pause animasi saat tab tidak aktif
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -68,7 +71,9 @@ export default function Home() {
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
+
   const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.4 });
+
   // 👉 LogoLoop data
   const techLogos = [
     {
@@ -178,6 +183,7 @@ export default function Home() {
       )
       .then(
         () => {
+          // keep alert for now (simple), but it's safe — you can replace with toast later
           alert("Message sent! Thank you.");
           formRef.current!.reset();
         },
@@ -188,55 +194,48 @@ export default function Home() {
       );
   };
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+  // helper: choose lighter animation variants when on iPhone or prefers reduced motion
+  const reduceMotion = prefersReducedMotion || isIPhone;
+
   return (
     <div className="font-sans snap-y snap-mandatory scroll-smooth bg-white text-black dark:bg-[#050B16] dark:text-gray-200 transition-colors duration-300">
       {/* ====== NAVBAR ====== */}
       <Navbar />
+
       {/* ===== HERO SECTION ===== */}
       <section
         id="home"
-        className="snap-start min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center justify-center p-6 lg:p-12 gap-y-6 lg:gap-x-12"
-        style={{
-          scrollSnapType: "y mandatory",
-          willChange: "transform",
-        }}
+        className="snap-start min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center justify-center p-6 lg:p-12 gap-y-6 lg:gap-x-12 motion-smooth"
       >
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
           <div className="w-full text-base sm:text-lg lg:text-3xl font-bold flex flex-wrap items-center justify-center lg:justify-start gap-y-1 sm:gap-x-2 leading-snug">
             <span>I am ready for job</span>
-            {isClient &&
-              (shouldReduceMotion ? (
-                // ✅ Static version for iPhone / reduced motion
-                <span className="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold">
-                  Front-End Developer
-                </span>
-              ) : (
-                // 💫 Animated version for other devices
-                <RotatingText
-                  texts={[
-                    "Front-End Developer",
-                    "IT Support",
-                    "Cyber Security Analyst",
-                  ]}
-                  mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
-                  staggerFrom="last"
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  exit={{ y: "-120%" }}
-                  staggerDuration={0.025}
-                  splitLevelClassName="overflow-hidden pb-0.5"
-                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                  rotationInterval={5000}
-                />
-              ))}
+            <RotatingText
+              texts={[
+                "Front-End Developer",
+                "IT Support",
+                "Cyber Security Analyst",
+              ]}
+              mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
+              staggerFrom="last"
+              // lighten motion when reduceMotion
+              initial={reduceMotion ? { opacity: 0 } : { y: "100%" }}
+              animate={reduceMotion ? { opacity: 1 } : { y: 0 }}
+              exit={reduceMotion ? { opacity: 0 } : { y: "-120%" }}
+              staggerDuration={0.025}
+              splitLevelClassName="overflow-hidden pb-0.5"
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              rotationInterval={4000}
+            />
           </div>
 
           <ShinyText
             text="Tiovaldo Ratungalo"
-            speed={shouldReduceMotion ? 0 : 5}
+            speed={reduceMotion ? 0 : 5}
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-cyan-300"
-            style={{ willChange: "transform" }} // OPTIMASI: Hardware acceleration
           />
 
           <p className="max-w-md md:max-w-xl text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed text-center lg:text-left">
@@ -264,51 +263,56 @@ export default function Home() {
         {/* RIGHT IMAGE (Lazy Animated Border) */}
         <div className="flex items-center justify-center">
           {isClient && (
-            <ElectricBorder
-              color="#67E8F9"
-              speed={shouldReduceMotion ? 0.1 : isMobile ? 0.6 : 1.2}
-              chaos={shouldReduceMotion ? 0.05 : isMobile ? 0.3 : 0.6}
-              thickness={2}
+            <div
+              className="relative flex items-center justify-center motion-optimized"
               style={{
-                borderRadius: "50%",
-                padding: "6px",
-                willChange: "transform",
+                WebkitTransform: "translateZ(0)",
+                transform: "translate3d(0,0,0)",
+                backfaceVisibility: "hidden",
+                willChange: "transform, opacity",
               }}
             >
-              <img
-                src="/profil.png"
-                alt="Tiovaldo"
-                className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] rounded-full object-cover object-top"
-                loading="lazy"
-                decoding="async"
-                sizes="(max-width: 768px) 80vw, (max-width: 1024px) 40vw, 28rem"
-              />
-            </ElectricBorder>
+              <ElectricBorder
+                color="#67E8F9"
+                // lighter animation parameters for iPhone
+                speed={reduceMotion ? 0.35 : isMobile ? 0.6 : 1.2}
+                chaos={reduceMotion ? 0.2 : isMobile ? 0.3 : 0.6}
+                thickness={2}
+                style={{
+                  borderRadius: "50%",
+                  padding: "6px",
+                  willChange: "transform, opacity",
+                }}
+              >
+                <img
+                  src="/profil.png"
+                  alt="Tiovaldo"
+                  className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] rounded-full object-cover object-top"
+                  loading="lazy"
+                  style={{
+                    WebkitTransform: "translateZ(0)",
+                    transform: "translate3d(0,0,0)",
+                    willChange: "transform",
+                    backfaceVisibility: "hidden",
+                  }}
+                />
+              </ElectricBorder>
+            </div>
           )}
         </div>
       </section>
 
       {/* ====== SCROLL TEXT (About Me) ====== */}
-      <section
-        className="snap-start py-6 bg-transparent flex flex-col gap-2"
-        style={{ scrollSnapType: "y mandatory" }}
-      >
-        {isClient &&
-          (shouldReduceMotion ? (
-            // 🧊 Static text for iPhone / reduced motion (OPTIMASI: Gunakan state)
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide text-center">
-              About Me
-            </h2>
-          ) : (
-            // 🚀 Animated scroll for other devices
-            <div style={{ willChange: "transform" }}>
-              <ScrollVelocity
-                texts={["About Me", "About Me"]}
-                velocity={25}
-                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
-              />
-            </div>
-          ))}
+      <section className="snap-start py-6 bg-transparent flex flex-col gap-2">
+        {isClient ? (
+          <ScrollVelocity
+            texts={["About Me", "About Me"]}
+            velocity={reduceMotion ? 12 : 30}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cyan-300 uppercase tracking-wide"
+          />
+        ) : (
+          <h2 className="text-4xl font-extrabold text-cyan-300">About Me</h2>
+        )}
       </section>
 
       {/* ====== ABOUT ====== */}
@@ -320,19 +324,19 @@ export default function Home() {
         {/* About text */}
         <motion.div
           className="lg:w-1/2 flex flex-col justify-center"
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -30 }}
+          whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
           <motion.div className="bg-white/90 dark:bg-[#0C1424] dark:bg-opacity-70 p-5 rounded-xl shadow-md border border-gray-200 dark:border-cyan-400 dark:border-opacity-20 transition-colors">
             <div className="text-gray-700 dark:text-gray-300 text-justify space-y-4">
               <p>
-                Hello, My name is Tiovaldo Sindovan Ratungalo. I graduated with
-                a Bachelor’s degree in Computer Science from Universitas Klabat
-                in 2024. I have a strong interest in technology, programming,
-                and cybersecurity. My passion for AI development and front-end
-                web design continues to grow.
+                Hello, My name is Tiovaldo Sindovan Ratungalo.I graduated with a
+                Bachelor’s degree in Computer Science from Universitas Klabat in
+                2024. I have a strong interest in technology, programming, and
+                cybersecurity. My passion for AI development and front-end web
+                design continues to grow.
               </p>
               <p>
                 Currently, I am focusing on exploring the world of trading,
@@ -368,7 +372,10 @@ export default function Home() {
                       initial={{ width: 0 }}
                       whileInView={{ width: `${item.level}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1.5, delay: index * 0.3 }}
+                      transition={{
+                        duration: reduceMotion ? 0.9 : 1.5,
+                        delay: index * 0.25,
+                      }}
                       className="h-3 bg-cyan-400 rounded-full"
                     />
                   </div>
@@ -381,16 +388,20 @@ export default function Home() {
         {/* Right Profile Image */}
         <motion.div
           className="lg:w-1/2 flex items-center justify-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
+          whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          animate={{ y: [0, -10, 0] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            repeatType: "loop",
-            type: "tween",
-          }}
+          animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
+          transition={
+            reduceMotion
+              ? { duration: 0.6 }
+              : {
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  type: "tween",
+                }
+          }
         >
           <div className="w-full max-w-sm">
             <img
@@ -405,14 +416,17 @@ export default function Home() {
       <section
         id="project"
         ref={skillsRef}
-        className="relative snap-start min-h-screen bg-gray-100 text-black dark:bg-[#0C1424] dark:text-white 
-  p-6 lg:p-12 flex flex-col lg:flex-row items-stretch gap-8 overflow-visible transition-colors duration-300"
+        className="relative snap-start min-h-screen bg-gray-100 text-black dark:bg-[#0C1424] dark:text-white p-6 lg:p-12 flex flex-col lg:flex-row items-stretch gap-8 overflow-visible transition-colors duration-300"
       >
         {/* ====== LANDYARD (kiri) ====== */}
         <div className="lg:w-1/2 flex items-start justify-center relative z-0 pointer-events-none">
           <div className="w-full h-full">
             {isClient && isSkillsInView && (
-              <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
+              // keep Landyard but lighten gravity/position for mobile Safari
+              <Landyard
+                position={[0, 0, 12]}
+                gravity={isIPhone ? [0, -12, 0] : [0, -35, 0]}
+              />
             )}
           </div>
         </div>
@@ -421,22 +435,14 @@ export default function Home() {
           {/* Title */}
           <motion.h2
             className="mt-8 text-3xl sm:text-5xl lg:text-6xl text-center font-extrabold text-cyan-300 dark:text-[#67E8F9] uppercase mb-6 relative neon"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -20 }}
+            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             Projects
-            <span className="absolute -top-2 -right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-70"></span>
-            <span className="absolute -top-1 left-1 w-1 h-1 bg-white rounded-full animate-ping opacity-70"></span>
+            <span className="absolute -top-2 -right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-70" />
+            <span className="absolute -top-1 left-1 w-1 h-1 bg-white rounded-full animate-ping opacity-70" />
           </motion.h2>
-
-          {/* Subtitle */}
-          <motion.p
-            className="text-cyan-200 mb-8 text-center sm:text-lg"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-          ></motion.p>
 
           {/* Grid Projects */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full px-4 sm:px-0 transition-all duration-500 justify-items-center">
@@ -458,20 +464,24 @@ export default function Home() {
                     className={`relative cursor-pointer rounded-2xl overflow-hidden border border-cyan-300 shadow-md transition-all duration-500
               ${isActive ? "z-20" : "z-10 opacity-90"} project-card
               w-[88vw] sm:w-[300px] md:w-[340px] lg:w-[380px] aspect-[4/3]`}
-                    animate={{
-                      scale: isActive ? 1.05 : 0.95,
-                    }}
+                    animate={
+                      reduceMotion
+                        ? {}
+                        : {
+                            scale: isActive ? 1.05 : 0.95,
+                          }
+                    }
                     transition={{ type: "spring", stiffness: 150, damping: 18 }}
-                    whileHover={!isActive ? { scale: 1 } : {}}
+                    whileHover={!reduceMotion && !isActive ? { scale: 1 } : {}}
                   >
                     {/* Gambar Project */}
                     <motion.img
                       src={proj.image}
                       alt={`Project ${globalIndex + 1}`}
                       className="w-full h-full object-cover transition-transform duration-700"
-                      animate={{
-                        scale: isActive ? 1.15 : 1,
-                      }}
+                      animate={
+                        reduceMotion ? {} : { scale: isActive ? 1.15 : 1 }
+                      }
                       transition={{ duration: 0.5 }}
                     />
 
@@ -541,19 +551,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LOGO LOOP tetap */}
+      {/* LOGO LOOP tetap (lebih ringan on iPhone) */}
       <section className="snap-start bg-white dark:bg-[#050B16] py-8 sm:py-12 flex justify-center transition-colors duration-300">
-        <LogoLoop
-          logos={techLogos}
-          speed={120}
-          direction="left"
-          logoHeight={60} // sebelumnya 60
-          gap={60}
-          pauseOnHover
-          scaleOnHover
-          fadeOut
-          ariaLabel="Technology partners"
-        />
+        {isClient ? (
+          <LogoLoop
+            logos={techLogos}
+            speed={isIPhone || prefersReducedMotion ? 60 : 120}
+            direction="left"
+            logoHeight={60}
+            gap={isIPhone ? 40 : 60}
+            pauseOnHover={!isIPhone}
+            scaleOnHover={!isIPhone}
+            fadeOut
+            ariaLabel="Technology partners"
+          />
+        ) : null}
       </section>
 
       <section
@@ -566,15 +578,23 @@ export default function Home() {
           <motion.div
             key={i}
             className="absolute w-3 h-3 bg-cyan-400 rounded-full opacity-30"
-            initial={{
-              x: Math.random() * 800 - 400,
-              y: Math.random() * 800 - 400,
-            }}
-            animate={{
-              y: [0, -20, 0],
-              x: [0, 20, 0],
-              opacity: [0.2, 0.5, 0.2],
-            }}
+            initial={
+              reduceMotion
+                ? { opacity: 0.3 }
+                : {
+                    x: Math.random() * 800 - 400,
+                    y: Math.random() * 800 - 400,
+                  }
+            }
+            animate={
+              reduceMotion
+                ? { y: 0, x: 0, opacity: 0.3 }
+                : {
+                    y: [0, -20, 0],
+                    x: [0, 20, 0],
+                    opacity: [0.2, 0.5, 0.2],
+                  }
+            }
             transition={{
               repeat: Infinity,
               duration: 6 + Math.random() * 4,
@@ -585,11 +605,11 @@ export default function Home() {
 
         <motion.div
           className="w-full max-w-xl bg-white/90 dark:bg-[#0C1424] dark:bg-opacity-70 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-cyan-400 dark:border-opacity-20 relative z-10"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 30 }}
+          whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          whileHover={{ scale: 1.02 }}
+          whileHover={!reduceMotion ? { scale: 1.02 } : {}}
         >
           <h2 className="text-3xl font-bold mb-6 text-cyan-300 text-center">
             Contact Me
@@ -625,7 +645,7 @@ export default function Home() {
             <div className="flex justify-center">
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.05 }}
+                whileHover={!reduceMotion ? { scale: 1.05 } : {}}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-500 transition-all"
               >

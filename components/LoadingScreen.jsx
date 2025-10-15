@@ -34,6 +34,7 @@ export default function LoadingScreen() {
             >
               ⚠️ Not friendly for iPhone users... 😏
             </motion.h1>
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -41,6 +42,16 @@ export default function LoadingScreen() {
               className="text-sm mt-4 text-cyan-400/70"
             >
               (Still in progress — Safari needs extra love ❤️‍🔥)
+            </motion.p>
+
+            {/* ✨ Tambahan teks di bawah */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.8, duration: 1 }}
+              className="text-xs mt-2 text-cyan-500/70"
+            >
+              Please stay on screen while it loads ⏳
             </motion.p>
           </div>
         </motion.div>

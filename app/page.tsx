@@ -291,15 +291,15 @@ export default function Home() {
             transition={{ duration: 0.7 }}
           >
             <motion.div className="bg-white/90 dark:bg-[#0C1424] dark:bg-opacity-70 p-5 rounded-xl shadow-md border border-gray-200 dark:border-cyan-400 dark:border-opacity-20 transition-colors">
-              <div className="text-gray-700 dark:text-gray-300 text-justify space-y-4">
-                <p>
-                  Hello, My name is Tiovaldo Sindovan Ratungalo.I graduated with
-                  a Bachelor’s degree in Computer Science from Universitas
+              <div className="text-gray-700 dark:text-gray-300 text-justify leading-relaxed space-y-4">
+                <p className="text-justify">
+                  Hello, My name is Tiovaldo Sindovan Ratungalo. I graduated
+                  with a Bachelor’s degree in Computer Science from Universitas
                   Klabat in 2024. I have a strong interest in technology,
                   programming, and cybersecurity. My passion for AI development
                   and front-end web design continues to grow.
                 </p>
-                <p>
+                <p className="text-justify">
                   Currently, I am focusing on exploring the world of trading,
                   especially in market analysis and digital risk management. I
                   see this field as an exciting combination of logic, strategy,
@@ -307,40 +307,40 @@ export default function Home() {
                   computer science.
                 </p>
               </div>
-
-              {/* ===== Skill Title ===== */}
-              <h2 className="text-2xl font-bold text-cyan-300 mt-6 mb-4">
-                My Skills
-              </h2>
-
-              {/* ===== Skill Bars ===== */}
-              <div className="space-y-4">
-                {[
-                  { skill: "Game Development", level: 65 },
-                  { skill: "Web Development", level: 70 },
-                  { skill: "Mobile Development", level: 65 },
-                  { skill: "MS Office", level: 90 },
-                  { skill: "Trader", level: "?" },
-                  { skill: "Cybersecurity", level: "?" },
-                ].map((item, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      <span>{item.skill}</span>
-                      <span>{item.level}%</span>
-                    </div>
-                    <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-3">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${item.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.5, delay: index * 0.3 }}
-                        className="h-3 bg-cyan-400 rounded-full"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
             </motion.div>
+
+            {/* ===== Skill Title ===== */}
+            <h2 className="text-2xl font-bold text-cyan-300 mt-6 mb-4">
+              My Skills
+            </h2>
+
+            {/* ===== Skill Bars ===== */}
+            <div className="space-y-4">
+              {[
+                { skill: "Game Development", level: 65 },
+                { skill: "Web Development", level: 70 },
+                { skill: "Mobile Development", level: 65 },
+                { skill: "MS Office", level: 90 },
+                { skill: "Trader", level: "?" },
+                { skill: "Cybersecurity", level: "?" },
+              ].map((item, index) => (
+                <div key={index}>
+                  <div className="flex justify-between mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <span>{item.skill}</span>
+                    <span>{item.level}%</span>
+                  </div>
+                  <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-3">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${item.level}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1.5, delay: index * 0.3 }}
+                      className="h-3 bg-cyan-400 rounded-full"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Right Profile Image */}

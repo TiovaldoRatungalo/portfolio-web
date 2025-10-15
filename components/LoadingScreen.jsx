@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // default tidak loading
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2500); // durasi 2.5 detik
-    return () => clearTimeout(timer);
+    // Deteksi perangkat iOS (iPhone, iPad, iPod)
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isIOS) {
+      setIsLoading(true);
+      const timer = setTimeout(() => setIsLoading(false), 2500); // tampil 2.5 detik
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return (
@@ -34,7 +40,7 @@ export default function LoadingScreen() {
               transition={{ delay: 1.2, duration: 1 }}
               className="text-sm mt-4 text-cyan-400/70"
             >
-              (Still in progress — Safari needs extra love❤️‍🔥)
+              (Still in progress — Safari needs extra love ❤️‍🔥)
             </motion.p>
           </div>
         </motion.div>

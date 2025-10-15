@@ -391,8 +391,6 @@ export default function Home() {
               transition={{ duration: 0.8 }}
             >
               Projects
-              <span className="absolute -top-2 -right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-70"></span>
-              <span className="absolute -top-1 left-1 w-1 h-1 bg-white rounded-full animate-ping opacity-70"></span>
             </motion.h2>
 
             {/* Subtitle */}

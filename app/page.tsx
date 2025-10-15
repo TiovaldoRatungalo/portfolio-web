@@ -291,15 +291,22 @@ export default function Home() {
             transition={{ duration: 0.7 }}
           >
             <motion.div className="bg-white/90 dark:bg-[#0C1424] dark:bg-opacity-70 p-5 rounded-xl shadow-md border border-gray-200 dark:border-cyan-400 dark:border-opacity-20 transition-colors">
-              <div className="text-gray-700 dark:text-gray-300 text-justify leading-relaxed space-y-4">
-                <p className="text-justify">
+              <div className="text-gray-700 dark:text-gray-300 text-justify leading-tight space-y-4">
+                <p
+                  className="text-justify mt-3"
+                  style={{ letterSpacing: "-0.04em", lineHeight: "1.5" }}
+                >
                   Hello, My name is Tiovaldo Sindovan Ratungalo. I graduated
                   with a Bachelor’s degree in Computer Science from Universitas
                   Klabat in 2024. I have a strong interest in technology,
                   programming, and cybersecurity. My passion for AI development
                   and front-end web design continues to grow.
                 </p>
-                <p className="text-justify">
+
+                <p
+                  className="text-justify mt-3"
+                  style={{ letterSpacing: "-0.02em", lineHeight: "1.5" }}
+                >
                   Currently, I am focusing on exploring the world of trading,
                   especially in market analysis and digital risk management. I
                   see this field as an exciting combination of logic, strategy,
@@ -357,7 +364,7 @@ export default function Home() {
               type: "tween",
             }}
           >
-            <div className="w-full max-w-sm">
+            <div className="w-full max-w-md">
               <img
                 src="/about.png"
                 alt="Tiovaldo"

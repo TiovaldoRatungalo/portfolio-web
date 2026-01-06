@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(false); // default tidak loading
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Deteksi perangkat iOS (iPhone, iPad, iPod)
@@ -11,7 +11,7 @@ export default function LoadingScreen() {
 
     if (isIOS) {
       setIsLoading(true);
-      const timer = setTimeout(() => setIsLoading(false), 2500); // tampil 2.5 detik
+      const timer = setTimeout(() => setIsLoading(false), 2500);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -32,19 +32,9 @@ export default function LoadingScreen() {
               transition={{ duration: 0.8 }}
               className="text-2xl sm:text-4xl font-bold neon"
             >
-              ⚠️ Not friendly for iPhone users...
+              Hola amigos👋
             </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 1 }}
-              className="text-sm mt-4 text-cyan-400/70"
-            >
-              (Still in progress — Safari needs extra love ❤️‍🔥)
-            </motion.p>
-
-            {/* ✨ Tambahan teks di bawah */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

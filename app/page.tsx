@@ -37,7 +37,6 @@ const Landyard = dynamic(() => import("../components/Landyard/Landyard"), {
 });
 
 export default function Home() {
-  const [lang, setLang] = useState<"en" | "id">("en");
   const aboutRef = useRef<HTMLDivElement | null>(null);
   const skillsRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +81,7 @@ export default function Home() {
   }, []);
 
   const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.4 });
-  // 👉 LogoLoop data
+
   const techLogos = [
     {
       node: <SiReact className="w-12 h-12" style={{ color: "#61DAFB" }} />,
@@ -562,7 +561,7 @@ export default function Home() {
             logos={techLogos}
             speed={120}
             direction="left"
-            logoHeight={60} // sebelumnya 60
+            logoHeight={60}
             gap={60}
             pauseOnHover
             scaleOnHover

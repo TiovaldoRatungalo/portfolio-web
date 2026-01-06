@@ -45,10 +45,17 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
+  // ✅ TAMBAHKAN DI SINI
+  const floatingDots = useRef(
+    [...Array(6)].map(() => ({
+      x: Math.random() * 800 - 400,
+      y: Math.random() * 800 - 400,
+    }))
+  );
+
   useEffect(() => {
     setIsClient(true);
 
-    // 💤 Pause animasi saat tab tidak aktif
     const handleVisibilityChange = () => {
       if (document.hidden) {
         document.body.classList.add("paused");
@@ -56,7 +63,11 @@ export default function Home() {
         document.body.classList.remove("paused");
       }
     };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    document.addEventListener("visibilitychange", handleVisibilityChange, {
+      passive: true,
+    });
+
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
@@ -180,7 +191,13 @@ export default function Home() {
         }
       );
   };
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    }
+  }, []);
 
   return (
     <>
@@ -284,7 +301,7 @@ export default function Home() {
         >
           {/* About text */}
           <motion.div
-            className="lg:w-1/2 flex flex-col justify-center"
+            className="motion-element lg:w-1/2 flex flex-col justify-center"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -352,17 +369,21 @@ export default function Home() {
 
           {/* Right Profile Image */}
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center"
+            className="motion-element lg:w-1/2 flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            animate={{ y: [0, -10, 0] }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              repeatType: "loop",
-              type: "tween",
-            }}
+            animate={prefersReducedMotion ? {} : { y: [0, -10, 0] }}
+            transition={
+              prefersReducedMotion
+                ? {}
+                : {
+                    duration: 4,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    type: "tween",
+                  }
+            }
           >
             <div className="w-full max-w-md">
               <img
@@ -383,7 +404,7 @@ export default function Home() {
           {/* ====== LANDYARD (kiri) ====== */}
           <div className="lg:w-1/2 flex items-start justify-center relative z-0 pointer-events-none">
             <div className="w-full h-full">
-              {isClient && isSkillsInView && (
+              {isClient && isSkillsInView && !prefersReducedMotion && (
                 <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
               )}
             </div>
@@ -536,24 +557,30 @@ export default function Home() {
           className="snap-start min-h-screen relative overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100 dark:from-[#0A0F1E] dark:to-[#050B16] text-black dark:text-white p-6 lg:p-12 transition-colors duration-300 flex justify-center items-center"
         >
           {/* ===== Floating Dots ===== */}
-          {[...Array(6)].map((_, i) => (
+          {floatingDots.current.map((pos, i) => (
             <motion.div
               key={i}
-              className="absolute w-3 h-3 bg-cyan-400 rounded-full opacity-30"
-              initial={{
-                x: Math.random() * 800 - 400,
-                y: Math.random() * 800 - 400,
-              }}
-              animate={{
-                y: [0, -20, 0],
-                x: [0, 20, 0],
-                opacity: [0.2, 0.5, 0.2],
-              }}
-              transition={{
-                repeat: Infinity,
-                duration: 6 + Math.random() * 4,
-                delay: i * 0.5,
-              }}
+              className="absolute w-3 h-3 bg-cyan-400 rounded-full opacity-30 motion-element"
+              initial={{ x: pos.x, y: pos.y }}
+              animate={
+                prefersReducedMotion
+                  ? {}
+                  : {
+                      y: [pos.y, pos.y - 20, pos.y],
+                      x: [pos.x, pos.x + 20, pos.x],
+                      opacity: [0.2, 0.5, 0.2],
+                    }
+              }
+              transition={
+                prefersReducedMotion
+                  ? {}
+                  : {
+                      repeat: Infinity,
+                      duration: 6 + i,
+                      delay: i * 0.5,
+                      type: "tween",
+                    }
+              }
             />
           ))}
 

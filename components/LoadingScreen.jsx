@@ -32,7 +32,7 @@ export default function LoadingScreen() {
               transition={{ duration: 0.8 }}
               className="text-2xl sm:text-4xl font-bold neon"
             >
-              ⚠️ Not friendly for iPhone users... 😏
+              ⚠️ Not friendly for iPhone users...
             </motion.h1>
 
             <motion.p

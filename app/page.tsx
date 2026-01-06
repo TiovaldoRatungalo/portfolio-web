@@ -44,8 +44,17 @@ export default function Home() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const [isIOS, setIsIOS] = useState(false);
+  const [isMobileClient, setIsMobileClient] = useState(false);
 
-  // ✅ TAMBAHKAN DI SINI
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const ua = navigator.userAgent;
+      setIsIOS(/iPad|iPhone|iPod/.test(ua));
+      setIsMobile(window.innerWidth < 768);
+    }
+  }, []);
+
   const floatingDots = useRef(
     [...Array(6)].map(() => ({
       x: Math.random() * 800 - 400,
@@ -225,13 +234,17 @@ export default function Home() {
                 ]}
                 mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
                 staggerFrom="last"
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "-120%" }}
-                staggerDuration={0.025}
+                initial={isIOS ? { opacity: 0 } : { y: "100%" }}
+                animate={isIOS ? { opacity: 1 } : { y: 0 }}
+                exit={isIOS ? { opacity: 0 } : { y: "-120%" }}
+                staggerDuration={isIOS ? 0 : 0.025}
                 splitLevelClassName="overflow-hidden pb-0.5"
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                rotationInterval={4000}
+                transition={
+                  isIOS
+                    ? { duration: 0.4 }
+                    : { type: "spring", damping: 30, stiffness: 400 }
+                }
+                rotationInterval={isIOS ? 5000 : 4000}
               />
             </div>
 
@@ -265,7 +278,7 @@ export default function Home() {
 
           {/* RIGHT IMAGE (Lazy Animated Border) */}
           <div className="flex items-center justify-center">
-            {isClient && (
+            {isClient && !isIOS ? (
               <ElectricBorder
                 color="#67E8F9"
                 speed={isMobile ? 0.6 : 1.2}
@@ -280,6 +293,13 @@ export default function Home() {
                   loading="lazy"
                 />
               </ElectricBorder>
+            ) : (
+              <img
+                src="/profil.png"
+                alt="Tiovaldo"
+                className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[28rem] lg:h-[28rem] rounded-full object-cover object-top"
+                loading="lazy"
+              />
             )}
           </div>
         </section>
@@ -373,9 +393,9 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            animate={prefersReducedMotion ? {} : { y: [0, -10, 0] }}
+            animate={prefersReducedMotion || isIOS ? {} : { y: [0, -10, 0] }}
             transition={
-              prefersReducedMotion
+              prefersReducedMotion || isIOS
                 ? {}
                 : {
                     duration: 4,
@@ -407,6 +427,7 @@ export default function Home() {
               {isClient &&
                 isSkillsInView &&
                 !prefersReducedMotion &&
+                !isIOS &&
                 !isMobile && (
                   <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
                 )}

@@ -404,9 +404,12 @@ export default function Home() {
           {/* ====== LANDYARD (kiri) ====== */}
           <div className="lg:w-1/2 flex items-start justify-center relative z-0 pointer-events-none">
             <div className="w-full h-full">
-              {isClient && isSkillsInView && !prefersReducedMotion && (
-                <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
-              )}
+              {isClient &&
+                isSkillsInView &&
+                !prefersReducedMotion &&
+                !isMobile && (
+                  <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
+                )}
             </div>
           </div>
           {/* ====== PROJECTS (kanan) ====== */}

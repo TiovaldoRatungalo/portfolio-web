@@ -393,9 +393,9 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            animate={prefersReducedMotion || isIOS ? {} : { y: [0, -10, 0] }}
+            animate={prefersReducedMotion ? {} : { y: [0, -10, 0] }}
             transition={
-              prefersReducedMotion || isIOS
+              prefersReducedMotion
                 ? {}
                 : {
                     duration: 4,
@@ -424,13 +424,9 @@ export default function Home() {
           {/* ====== LANDYARD (kiri) ====== */}
           <div className="lg:w-1/2 flex items-start justify-center relative z-0 pointer-events-none">
             <div className="w-full h-full">
-              {isClient &&
-                isSkillsInView &&
-                !prefersReducedMotion &&
-                !isIOS &&
-                !isMobile && (
-                  <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
-                )}
+              {isClient && isSkillsInView && !prefersReducedMotion && (
+                <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
+              )}
             </div>
           </div>
           {/* ====== PROJECTS (kanan) ====== */}

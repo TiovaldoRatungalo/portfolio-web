@@ -2,17 +2,22 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function LoadingScreen() {
+export default function LoadingScreen({ onFinish }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Deteksi perangkat iOS (iPhone, iPad, iPod)
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isIOS) {
       setIsLoading(true);
-      const timer = setTimeout(() => setIsLoading(false), 2500);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        onFinish?.();
+      }, 2500);
+
       return () => clearTimeout(timer);
+    } else {
+      onFinish?.();
     }
   }, []);
 
@@ -29,16 +34,15 @@ export default function LoadingScreen() {
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              className="text-2xl sm:text-4xl font-bold neon"
+              className="text-2xl sm:text-4xl font-bold"
             >
-              Hola amigos👋
+              Hola amigos 👋
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.8, duration: 1 }}
+              transition={{ delay: 1 }}
               className="text-xs mt-2 text-cyan-500/70"
             >
               Please stay on screen while it loads ⏳

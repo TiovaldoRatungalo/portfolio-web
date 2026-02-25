@@ -46,7 +46,8 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const [isIOS, setIsIOS] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // ✅ pakai ini saja
+  const [isMobile, setIsMobile] = useState(false);
+  const [loadingDone, setLoadingDone] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -219,7 +220,7 @@ export default function Home() {
   return (
     <>
       {/* ===== LOADING SCREEN ===== */}
-      <LoadingScreen />
+      {!loadingDone && <LoadingScreen onFinish={() => setLoadingDone(true)} />}
 
       <div className="font-sans snap-y snap-mandatory scroll-smooth bg-white text-black dark:bg-[#050B16] dark:text-gray-200 transition-colors duration-300">
         {/* ====== NAVBAR ====== */}
@@ -715,8 +716,8 @@ export default function Home() {
           </div>
         </footer>
       </div>
-      {/* AI DI LUAR SEMUA SECTION */}
-      <AiChat />
+      {/* AI  */}
+      {loadingDone && <AiChat />}
     </>
   );
 }

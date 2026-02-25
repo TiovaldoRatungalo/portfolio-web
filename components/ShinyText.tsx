@@ -5,7 +5,7 @@ type ShinyTextProps = {
   text?: string;
   children?: ReactNode;
   disabled?: boolean;
-  speed?: number; // detik untuk 1 loop shimmer
+  speed?: number; 
   className?: string;
   style?: CSSProperties;
 };
@@ -14,7 +14,7 @@ export default function ShinyText({
   text,
   children,
   disabled = false,
-  speed = 10, // default shimmer lebih pelan
+  speed = 10,
   className = "",
   style = {},
 }: ShinyTextProps) {
@@ -24,8 +24,8 @@ export default function ShinyText({
     <span
       className={`relative inline-block ${className}`}
       style={{
-        color: "#9ca3af", // teks dasar tetap soft abu-abu
-        textShadow: "0 0 2px rgba(255,255,255,0.15)", // glow tipis
+        color: "#9ca3af", 
+        textShadow: "0 0 2px rgba(255,255,255,0.15)", 
         ...style,
       }}
     >

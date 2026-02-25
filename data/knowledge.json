@@ -1,0 +1,288 @@
+[
+  {
+    "keywords": [
+      "who are you",
+      "siapa kamu",
+      "tentukan dirimu",
+      "tentang kamu",
+      "what are you",
+      "kamu siapa",
+      "perkenalkan dirimu"
+    ],
+    "answer_id": "Saya adalah AI assistant yang membantu menjelaskan profil dan portfolio Tiovaldo Ratungalo.",
+    "answer_en": "I am an AI assistant that helps explain Tiovaldo Ratungalo's profile and portfolio."
+  },
+  {
+    "keywords": [
+      "siapa tiovaldo",
+      "tiovaldo",
+      "ratungalo",
+      "tio",
+      "tio ratungalo",
+      "siapa tio",
+      "tentang tio",
+      "owner",
+      "pemilik website",
+      "pemilik web ini",
+      "siapa yang buat website ini"
+    ],
+    "answer_id": "Tiovaldo Sindovan Ratungalo adalah lulusan Sarjana Komputer dari Universitas Klabat tahun 2024 yang memiliki minat pada teknologi, AI, dan keamanan siber.",
+    "answer_en": "Tiovaldo Sindovan Ratungalo is a Computer Science graduate from Klabat University (2024) with interests in technology, AI, and cybersecurity."
+  },
+  {
+    "keywords": [
+      "profil",
+      "tentang tiovaldo",
+      "tentang tio",
+      "about",
+      "background",
+      "latar belakang",
+      "biografi",
+      "profile"
+    ],
+    "answer_id": "Tiovaldo adalah lulusan Computer Science yang fokus pada pengembangan web modern, AI, dan keamanan sistem.",
+    "answer_en": "Tiovaldo is a Computer Science graduate focused on modern web development, AI, and system security."
+  },
+  {
+    "keywords": [
+      "kepribadian",
+      "personality",
+      "seperti apa",
+      "orangnya bagaimana",
+      "karakter"
+    ],
+    "answer_id": "Tiovaldo dikenal sebagai pribadi yang disiplin, cepat belajar, dan senang mengeksplorasi teknologi baru.",
+    "answer_en": "Tiovaldo is known as a disciplined fast learner who enjoys exploring new technologies."
+  },
+  {
+    "keywords": [
+      "kelebihan",
+      "strength",
+      "kelebihan tiovaldo",
+      "keunggulan",
+      "nilai lebih"
+    ],
+    "answer_id": "Kelebihan Tiovaldo adalah kemampuan belajar cepat, berpikir logis, serta mampu bekerja mandiri maupun dalam tim.",
+    "answer_en": "Tiovaldo's strengths are fast learning, logical thinking, and the ability to work independently or in a team."
+  },
+  {
+    "keywords": [
+      "skill",
+      "skills",
+      "keahlian",
+      "kemampuan",
+      "apa saja skill",
+      "bisa apa",
+      "what can you do",
+      "kemampuan teknis"
+    ],
+    "answer_id": "Keahlian Tiovaldo meliputi Web Development, Cybersecurity dasar, AI Development, dan troubleshooting komputer.",
+    "answer_en": "Tiovaldo's skills include web development, basic cybersecurity, AI development, and computer troubleshooting."
+  },
+  {
+    "keywords": [
+      "frontend",
+      "front end",
+      "frontend developer",
+      "fe dev",
+      "ui developer",
+      "web development",
+      "buat web",
+      "website"
+    ],
+    "answer_id": "Tiovaldo mengembangkan website modern menggunakan React, Next.js, TypeScript, dan Tailwind CSS untuk tampilan yang responsif dan profesional.",
+    "answer_en": "Tiovaldo builds modern websites using React, Next.js, TypeScript, and Tailwind CSS for responsive and professional interfaces."
+  },
+  {
+    "keywords": [
+      "backend",
+      "server",
+      "api",
+      "database",
+      "backend developer",
+      "rest api",
+      "mysql"
+    ],
+    "answer_id": "Tiovaldo memahami backend dasar termasuk pembuatan API, pengolahan data, dan pengelolaan database MySQL.",
+    "answer_en": "Tiovaldo understands backend fundamentals, including API development, data processing, and MySQL database management."
+  },
+  {
+    "keywords": [
+      "ai",
+      "machine learning",
+      "artificial intelligence",
+      "chatbot",
+      "kecerdasan buatan",
+      "ml"
+    ],
+    "answer_id": "Tiovaldo tertarik pada Artificial Intelligence dan telah membangun AI Virtual Assistant berbasis chatbot.",
+    "answer_en": "Tiovaldo is interested in Artificial Intelligence and has built a chatbot-based AI Virtual Assistant."
+  },
+  {
+    "keywords": [
+      "cyber",
+      "security",
+      "cybersecurity",
+      "keamanan",
+      "network security",
+      "keamanan jaringan",
+      "infosec"
+    ],
+    "answer_id": "Tiovaldo memiliki pengetahuan dasar cybersecurity termasuk network security dan perlindungan data.",
+    "answer_en": "Tiovaldo has foundational cybersecurity knowledge, including network security and data protection."
+  },
+  {
+    "keywords": [
+      "project",
+      "portfolio",
+      "proyek",
+      "karya",
+      "hasil kerja",
+      "portofolio",
+      "project apa saja"
+    ],
+    "answer_id": "Proyek Tiovaldo mencakup AI Virtual Assistant, pengembangan game Unity, pemodelan 3D Blender, serta proyek robotika.",
+    "answer_en": "Tiovaldo's projects include an AI Virtual Assistant, Unity game development, Blender 3D modeling, and robotics projects."
+  },
+  {
+    "keywords": [
+      "virtual assistant",
+      "ai assistant",
+      "rumah sakit",
+      "hospital assistant",
+      "chatbot rumah sakit"
+    ],
+    "answer_id": "AI Virtual Assistant membantu pengguna mendapatkan informasi jadwal dokter, lokasi ruangan, dan layanan rumah sakit melalui chat dan suara.",
+    "answer_en": "The AI Virtual Assistant helps users get doctor schedules, room locations, and hospital service information through chat and voice."
+  },
+  {
+    "keywords": [
+      "game",
+      "unity",
+      "game development",
+      "buat game",
+      "game developer"
+    ],
+    "answer_id": "Tiovaldo mengembangkan game 2D dan 3D menggunakan Unity dan C#, termasuk sistem fisika dan pencahayaan realistis.",
+    "answer_en": "Tiovaldo develops 2D and 3D games using Unity and C#, including physics systems and realistic lighting."
+  },
+  {
+    "keywords": ["robot", "robotika", "webots", "robotics", "simulasi robot"],
+    "answer_id": "Tiovaldo mengembangkan robot virtual menggunakan Webots Simulator dengan sensor jarak untuk navigasi otomatis.",
+    "answer_en": "Tiovaldo develops virtual robots in Webots Simulator using distance sensors for autonomous navigation."
+  },
+  {
+    "keywords": ["3d", "blender", "model 3d", "3d modeling", "desain 3d"],
+    "answer_id": "Tiovaldo membuat model 3D menggunakan Blender yang dapat digunakan sebagai aset game atau animasi.",
+    "answer_en": "Tiovaldo creates 3D models with Blender that can be used as assets for games or animation."
+  },
+  {
+    "keywords": [
+      "tools",
+      "tech stack",
+      "teknologi",
+      "stack",
+      "tools apa",
+      "pakai teknologi apa"
+    ],
+    "answer_id": "Teknologi yang digunakan meliputi React, Next.js, TypeScript, Tailwind CSS, Python, Unity, Blender, dan MySQL.",
+    "answer_en": "Technologies used include React, Next.js, TypeScript, Tailwind CSS, Python, Unity, Blender, and MySQL."
+  },
+  {
+    "keywords": [
+      "experience",
+      "pengalaman",
+      "pengalaman kerja",
+      "experience apa",
+      "sudah pernah kerja"
+    ],
+    "answer_id": "Sebagai fresh graduate, Tiovaldo memiliki pengalaman proyek nyata dalam pengembangan AI, web, dan sistem interaktif.",
+    "answer_en": "As a fresh graduate, Tiovaldo has real project experience in AI development, web development, and interactive systems."
+  },
+  {
+    "keywords": [
+      "fresh graduate",
+      "lulusan baru",
+      "baru lulus",
+      "new graduate"
+    ],
+    "answer_id": "Ya, Tiovaldo adalah fresh graduate yang siap berkembang dan berkontribusi di dunia profesional IT.",
+    "answer_en": "Yes, Tiovaldo is a fresh graduate who is ready to grow and contribute in the professional IT world."
+  },
+  {
+    "keywords": [
+      "kenapa harus hire",
+      "why hire",
+      "alasan merekrut",
+      "kenapa pilih dia",
+      "why choose"
+    ],
+    "answer_id": "Tiovaldo memiliki kombinasi kemampuan teknis, kemauan belajar tinggi, dan adaptasi cepat terhadap teknologi baru.",
+    "answer_en": "Tiovaldo offers a strong combination of technical ability, a high willingness to learn, and fast adaptation to new technologies."
+  },
+  {
+    "keywords": [
+      "job",
+      "hire",
+      "open to work",
+      "lowongan",
+      "kerja",
+      "rekrut",
+      "pekerjaan"
+    ],
+    "answer_id": "Tiovaldo terbuka untuk peluang kerja sebagai Front-End Developer, IT Support, atau posisi terkait teknologi.",
+    "answer_en": "Tiovaldo is open to job opportunities as a Front-End Developer, IT Support, or other technology-related roles."
+  },
+  {
+    "keywords": ["remote", "kerja remote", "work from home", "wfh"],
+    "answer_id": "Tiovaldo terbuka untuk pekerjaan remote maupun on-site sesuai kebutuhan perusahaan.",
+    "answer_en": "Tiovaldo is open to both remote and on-site work depending on company needs."
+  },
+  {
+    "keywords": [
+      "contact",
+      "kontak",
+      "email",
+      "hubungi",
+      "reach",
+      "cara hubungi"
+    ],
+    "answer_id": "Kamu dapat menghubungi Tiovaldo melalui form contact di website ini atau melalui LinkedIn dan GitHub.",
+    "answer_en": "You can contact Tiovaldo through the contact form on this website or via LinkedIn and GitHub."
+  },
+  {
+    "keywords": [
+      "pendidikan",
+      "kuliah dimana",
+      "universitas",
+      "kampus",
+      "gelar",
+      "jurusan",
+      "education",
+      "study",
+      "lulusan mana"
+    ],
+    "answer_id": "Tiovaldo adalah alumni Universitas Klabat dengan gelar Sarjana Komputer (2024).",
+    "answer_en": "Tiovaldo is a Klabat University alumnus with a Bachelor's degree in Computer Science (2024)."
+  },
+  {
+    "keywords": ["cv", "resume", "download cv", "lihat cv"],
+    "answer_id": "CV Tiovaldo dapat diunduh melalui tombol Download CV pada halaman utama website.",
+    "answer_en": "Tiovaldo's CV can be downloaded using the Download CV button on the website's main page."
+  },
+  {
+    "keywords": ["lokasi", "tinggal dimana", "domisili", "berasal dari mana"],
+    "answer_id": "Tiovaldo berdomisili di Sulawesi Utara, Indonesia.",
+    "answer_en": "Tiovaldo is based in North Sulawesi, Indonesia."
+  },
+  {
+    "keywords": ["halo", "hai", "hello", "hi", "hey", "halo tio", "hai tio"],
+    "answer_id": "Halo! 👋 Senang bertemu dengan Anda. Silakan tanyakan apa saja tentang Tiovaldo dan portfolio-nya.",
+    "answer_en": "Hello! 👋 Nice to meet you. Feel free to ask anything about Tiovaldo and his portfolio."
+  },
+  {
+    "keywords": ["terima kasih", "thanks", "thank you", "makasih"],
+    "answer_id": "Sama-sama! 😊 Jika ada pertanyaan lain, saya siap membantu.",
+    "answer_en": "You're welcome! 😊 If you have more questions, I'm ready to help."
+  }
+]

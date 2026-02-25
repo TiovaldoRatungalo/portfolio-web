@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Navbar from "../components/Navbar";
+import AiChat from "@/components/AiChat";
 import ShinyText from "../components/ShinyText";
 import RotatingText from "../components/RotatingText";
 import { FloatingDock } from "@/components/ui/floating-dock";
@@ -41,16 +42,25 @@ export default function Home() {
   const skillsRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
+
   const [isClient, setIsClient] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const [isIOS, setIsIOS] = useState(false);
-  const [isMobileClient, setIsMobileClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // ✅ pakai ini saja
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const ua = navigator.userAgent;
       setIsIOS(/iPad|iPhone|iPod/.test(ua));
-      setIsMobile(window.innerWidth < 768);
+
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+
+      checkMobile(); // cek pertama kali
+      window.addEventListener("resize", checkMobile);
+
+      return () => window.removeEventListener("resize", checkMobile);
     }
   }, []);
 
@@ -58,7 +68,7 @@ export default function Home() {
     [...Array(6)].map(() => ({
       x: Math.random() * 800 - 400,
       y: Math.random() * 800 - 400,
-    }))
+    })),
   );
 
   useEffect(() => {
@@ -186,7 +196,7 @@ export default function Home() {
         "service_6j85ogl",
         "template_fdxb0jx",
         formRef.current!,
-        "4ri5HHBGbOfcnjLKe"
+        "4ri5HHBGbOfcnjLKe",
       )
       .then(
         () => {
@@ -196,10 +206,9 @@ export default function Home() {
         (error: any) => {
           alert("Failed to send message. Try again later.");
           console.error(error);
-        }
+        },
       );
   };
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -228,7 +237,7 @@ export default function Home() {
               <RotatingText
                 texts={[
                   "Front-End Developer",
-                  "IT Support",
+                  "IT Helpdesk",
                   "Cyber Security Analyst",
                 ]}
                 mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"
@@ -332,22 +341,21 @@ export default function Home() {
                   className="text-justify mt-3"
                   style={{ letterSpacing: "-0.04em", lineHeight: "1.5" }}
                 >
-                  Hello, My name is Tiovaldo Sindovan Ratungalo. I graduated
-                  with a Bachelor’s degree in Computer Science from Universitas
-                  Klabat in 2024. I have a strong interest in technology,
-                  programming, and cybersecurity. My passion for AI development
-                  and front-end web design continues to grow.
+                  Hello, I am Tiovaldo Sindovan Ratungalo, a Computer Science
+                  graduate from Universitas Klabat in 2024. I have a strong
+                  interest in technology, programming, and cybersecurity, along
+                  with a growing passion for AI development and front-end web
+                  design.
                 </p>
 
                 <p
                   className="text-justify mt-3"
                   style={{ letterSpacing: "-0.02em", lineHeight: "1.5" }}
                 >
-                  Currently, I am focusing on exploring the world of trading,
-                  especially in market analysis and digital risk management. I
-                  see this field as an exciting combination of logic, strategy,
-                  and technology, which aligns with my analytical skills in
-                  computer science.
+                  I enjoy learning new technologies and developing innovative,
+                  user-friendly digital solutions. With a strong analytical
+                  mindset and problem-solving skills, I am motivated to build
+                  efficient and reliable technology systems.
                 </p>
               </div>
             </motion.div>
@@ -364,7 +372,6 @@ export default function Home() {
                 { skill: "Web Development", level: 70 },
                 { skill: "Mobile Development", level: 65 },
                 { skill: "MS Office", level: 90 },
-                { skill: "Trader", level: "?" },
                 { skill: "Cybersecurity", level: "?" },
               ].map((item, index) => (
                 <div key={index}>
@@ -423,9 +430,12 @@ export default function Home() {
           {/* ====== LANDYARD (kiri) ====== */}
           <div className="lg:w-1/2 flex items-start justify-center relative z-0 pointer-events-none">
             <div className="w-full h-full">
-              {isClient && isSkillsInView && !prefersReducedMotion && (
-                <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
-              )}
+              {isClient &&
+                isSkillsInView &&
+                !prefersReducedMotion &&
+                !isMobile && (
+                  <Landyard position={[0, 0, 12]} gravity={[0, -35, 0]} />
+                )}
             </div>
           </div>
           {/* ====== PROJECTS (kanan) ====== */}
@@ -456,7 +466,7 @@ export default function Home() {
 
                 const handleClick = () => {
                   setActiveIndex((prev) =>
-                    prev === globalIndex ? null : globalIndex
+                    prev === globalIndex ? null : globalIndex,
                   );
                 };
 
@@ -536,7 +546,7 @@ export default function Home() {
               <button
                 onClick={() => {
                   setCurrentIndex((prev) =>
-                    prev + 1 < projects.length ? prev + 1 : prev
+                    prev + 1 < projects.length ? prev + 1 : prev,
                   );
                   setActiveIndex(null);
                 }}
@@ -705,6 +715,8 @@ export default function Home() {
           </div>
         </footer>
       </div>
+      {/* AI DI LUAR SEMUA SECTION */}
+      <AiChat />
     </>
   );
 }

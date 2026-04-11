@@ -238,7 +238,7 @@ export default function Home() {
               <RotatingText
                 texts={[
                   "Front-End Developer",
-                  "IT Helpdesk",
+                  "Mobile Developer",
                   "Cyber Security Analyst",
                 ]}
                 mainClassName="px-2 bg-cyan-300 text-black rounded-md inline-flex items-center text-base sm:text-lg lg:text-3xl font-bold"

@@ -3,6 +3,14 @@
 export type AIMessage = {
   role: "user" | "assistant";
   content: string;
+  suggestions?: string[];
+  didYouMean?: string[];
+};
+
+export type AIResponse = {
+  reply: string;
+  suggestions: string[];
+  didYouMean: string[] | null;
 };
 
 export async function sendMessage(message: string): Promise<AIMessage> {
@@ -19,7 +27,7 @@ export async function sendMessage(message: string): Promise<AIMessage> {
       throw new Error(`Server error: ${res.status}`);
     }
 
-    const data = await res.json();
+    const data: AIResponse = await res.json();
 
     if (!data?.reply) {
       return {
@@ -31,6 +39,8 @@ export async function sendMessage(message: string): Promise<AIMessage> {
     return {
       role: "assistant",
       content: data.reply,
+      suggestions: data.suggestions,
+      didYouMean: data.didYouMean ?? undefined,
     };
   } catch (error) {
     console.error("AI fetch failed:", error);
